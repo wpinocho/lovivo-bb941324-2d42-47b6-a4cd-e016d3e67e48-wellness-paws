@@ -1,9 +1,11 @@
+import { useState, useEffect } from 'react'
 import { ProductCard } from '@/components/ProductCard'
 import { CollectionCard } from '@/components/CollectionCard'
 import { FloatingCart } from '@/components/FloatingCart'
 import { EcommerceTemplate } from '@/templates/EcommerceTemplate'
 import { PetSelector } from '@/components/PetSelector'
 import { SubscriptionBundles } from '@/components/SubscriptionBundles'
+import { DiscountPopup } from '@/components/DiscountPopup'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import type { UseIndexLogicReturn } from '@/components/headless/HeadlessIndex'
@@ -25,6 +27,19 @@ export const IndexUI = ({ logic }: IndexUIProps) => {
     handleShowAllProducts,
   } = logic
 
+  // Estado para controlar el popup de descuento
+  const [showDiscountPopup, setShowDiscountPopup] = useState(false)
+
+  // Timer para mostrar el popup después de 10 segundos
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowDiscountPopup(true)
+    }, 10000) // 10 segundos
+
+    // Cleanup: cancelar el timer si el componente se desmonta
+    return () => clearTimeout(timer)
+  }, [])
+
   const handlePetSelection = (petType: 'dog' | 'cat', age: string, breed: string) => {
     console.log('Pet selected:', { petType, age, breed })
     // Scroll to products section
@@ -33,6 +48,12 @@ export const IndexUI = ({ logic }: IndexUIProps) => {
 
   return (
     <EcommerceTemplate showCart={true}>
+      {/* Discount Popup */}
+      <DiscountPopup 
+        isOpen={showDiscountPopup} 
+        onClose={() => setShowDiscountPopup(false)} 
+      />
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-[#0E7490]/5 via-white to-[#FDE68A]/10 py-20 border-b japanese-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
